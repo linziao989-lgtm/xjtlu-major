@@ -128,7 +128,7 @@
     '录取看什么': 'Admission looks at',
     '分数口径': 'Mark basis',
     '录取分 · 未公布': 'Admission mark · not published',
-    '学校不公布': 'Not published',
+    '学校不公布': '—',
     '把鼠标移到上面的标签，看这一行具体在做什么。': 'Hover a tag above to see what that job involves.',
     '用这个专业算分数': 'Calculate for this programme',
     '回到专业列表': 'Back to list',
