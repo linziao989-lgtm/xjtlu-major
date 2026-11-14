@@ -89,6 +89,40 @@
     '四年大概会怎么过': 'How the four years go',
     '同学院还有': 'Also in this school:',
     '进入这个专业': 'Getting in',
+    "学校 2025-26 学年实际公布的录取分（按大一上成绩排定）。明年会变，仍然只能参考。": "The mark the university actually published for 2025-26 (ranked by Semester 1 results). It will change next year — still a reference only.",
+    "学校不公布这个专业的录取分，网上流传的版本互相矛盾。想知道难度，看先修要求和你目标专业的容量，或者直接问教务。这里不给数字，是不想编一个。": "The university does not publish a mark for this programme, and circulating versions contradict each other. To judge difficulty, look at the prerequisites and the programme’s capacity — or ask the registry. No number is given here rather than inventing one.",
+    "不看大一成绩，满足上面的先修课程就能报；报名超出容量时按志愿顺序录取。": "Year-1 marks are not considered; meeting the prerequisites above is enough to apply. If demand exceeds capacity, places go by preference order.",
+    "近三年": "Last three years",
+    "还没有出分": "No marks yet",
+    "占比": "Weighting",
+    "合计": "Total",
+    "同学院还有：": "Also in this school: ",
+    "社区经验估算，官方从不公布；只用来比较专业冷热，不能当承诺。": "Community estimates; the university never publishes these. Use them to compare programmes, not as a promise.",
+    "年薪是国内一线／新一线城市、本科毕业 3–5 年的常见区间，税前，用来判断量级，不是 offer 承诺。": "Salary ranges are typical pre-tax figures for graduates 3–5 years out, in tier-1 or new tier-1 cities — a rough sense of scale, not an offer.",
+    "开始上专业核心课——电路、信号与系统、数据结构这类，同时进实验室看师兄师姐怎么做。": "Core courses start: circuits, signals and systems, data structures. You also spend time in the lab seeing how seniors work.",
+    "选方向课，做课程项目；这时候要找实习或者暑研，简历上得有东西。": "Electives and course projects. This is when you look for internships or summer research — your CV needs something on it.",
+    "毕业设计占掉大半年，同时准备申研（英国一年制硕士通常提前一年递交）。": "The final-year project takes most of the year, alongside master’s applications (UK one-year programmes open about a year ahead).",
+    "studio 是主课：做方案、被评图、改方案，一个学期两三个项目。": "Studio is the main course: design, get reviewed, redo. Two or three projects a semester.",
+    "项目变复杂，开始接触真实场地；软件出图和模型要跟上。": "Projects get more complex and start using real sites; drawings and models have to keep up.",
+    "毕业设计，建筑和规划方向还要整理作品集，申研基本都要 portfolio。": "Final project. Architecture and planning students also build a portfolio — most master’s applications require one.",
+    "课程转向理论、文本分析和研究方法，阅读量明显变大。": "Courses shift to theory, textual analysis and research methods; the reading load grows noticeably.",
+    "写长论文、做独立研究；有条件的话申请 exchange 或实习。": "Long essays and independent research; apply for exchange or internships if you can.",
+    "毕业论文是重头，申研看均分和 writing sample。": "The dissertation dominates. Master’s applications look at your average and a writing sample.",
+    "会计、金融、市场、管理各自的核心课开始分岔，专业感从这里出来。": "Accounting, finance, marketing and management each split into their own core courses — this is where the specialism appears.",
+    "实习季：四大、券商、外企的暑期实习大多在这时候投。": "Internship season: summer placements at the Big Four, brokerages and multinationals are mostly applied for now.",
+    "毕业论文 + 秋招/申研并行，节奏很紧。": "Dissertation plus autumn recruitment or master’s applications, running in parallel. Tight.",
+    "实分析、概率、微分方程这类硬课，是全院公认最难的一年。": "Real analysis, probability, differential equations — widely agreed to be the hardest year in the school.",
+    "选方向（纯数 / 应数 / 统计 / 金融数学），开始跟老师做项目。": "Pick a track (pure maths, applied maths, statistics, financial maths) and start projects with staff.",
+    "毕业论文；这个学院读研的比例很高，很多人从大三就在准备。": "Dissertation. A high share of this school goes on to postgraduate study, and many start preparing in year 3.",
+    "专业核心课加实验课，报告写得比想象中多。": "Core courses plus lab classes; you write far more reports than you expect.",
+    "进课题组做小课题，开始想清楚是读研还是就业。": "Join a research group for a small project and start deciding between postgraduate study and work.",
+    "毕业论文大多就是实验室里那个课题。": "The dissertation is usually that same lab project, extended.",
+    "大量实践作业：短片、动画、交互作品，边做边学。": "Lots of production work: short films, animation, interactive pieces. You learn by making.",
+    "组队做完整作品，找剧组或公司实习。": "Team up to make complete works, and intern with a production crew or company.",
+    "毕业作品 + 作品集，这一行的敲门砖就是作品。": "Graduation work plus a portfolio — in this field the work itself is the entry ticket.",
+    "专业课 + 企业项目式课程（PBL），很多作业是真实企业给的题。": "Courses plus project-based learning with companies; many assignments are real briefs from industry.",
+    "进企业实习、做真实项目，一部分课直接在产业环境里上。": "Internships and real projects; some classes happen directly in an industry setting.",
+    "毕业设计常和企业课题结合，找工作的时间点也更早。": "Final projects are often tied to company problems, and recruiting starts earlier.",
     '大一上需修': 'Semester 1 requires',
     '大一下需修': 'Semester 2 requires',
     '录取看什么': 'Admission looks at',
@@ -187,7 +221,12 @@
 
   /* 含内联标签的整段 */
   const HTML = {
-    warn: 'Entries marked <b>“official”</b> use the school’s published 2025-26 marks; the rest are community estimates. Both are <b>for reference only</b> — they change every year, so always go by the notice the school publishes in March.'
+    warn: 'Entries marked <b>“official”</b> use the school’s published 2025-26 marks; the rest are community estimates. Both are <b>for reference only</b> — they change every year, so always go by the notice the school publishes in March.',
+    y1: 'The curriculum is the same for everyone: <b>Calculus + Linear Algebra</b> as the base, plus EAP English and electives. The one thing that matters this year is doing well in those two maths modules — they decide which programme you can get into.',
+    'basis-cl': 'The average of <b>Calculus</b> and <b>Linear Algebra</b> in Semester 1',
+    'basis-c': 'Your <b>Calculus</b> mark in Semester 1',
+    'basis-n': '<b>No mark threshold</b> — admitted by preference order and capacity',
+    'basis-lang': 'Requires <b>two stages of a second foreign language</b>'
   };
 
   function absorbMajorNames() {
@@ -199,6 +238,9 @@
   const PATTERNS = [
     [/^(\d+) 个$/, '$1'],
     [/^(\d+) 月$/, 'March'],
+    [/^参考年薪 (\d+)–(\d+) 万$/, (m) => '≈ CNY ' + m[1] + '0–' + m[2] + '0k / yr'],
+    [/^剩余考 (\d+)$/, 'If you score $1'],
+
     [/^★ 收藏 (\d+)$/, '★ Saved $1'],
     [/^收藏 (\d+)$/, 'Saved $1'],
     [/^★\s*收藏 (\d+)$/, '★ Saved $1'],
@@ -213,11 +255,17 @@
   const origin = new WeakMap();
   const htmlOrigin = new WeakMap();
 
+  const BAD_TR = /MYMEMORY|WARNING|Sorry|https?:\/\//i;
+
   function applyText(node) {
     const raw = node.nodeValue;
     const key = raw.trim();
     if (!key || origin.has(node)) return;
     let out = DICT[key];
+    if (!out && window.EN_MAP) {
+      const cand = window.EN_MAP[key];
+      if (cand && !BAD_TR.test(cand)) out = cand;
+    }
     if (!out && /[0-9]/.test(key)) {
       for (const [re, rep] of PATTERNS) if (re.test(key)) { out = key.replace(re, rep); break; }
     }
@@ -291,6 +339,8 @@
 
   let timer = null;
   const mainEl = () => document.body;
+
+  window.__setLang = (l) => setLang(l);
 
   function setLang(lang) {
     if (lang === current) { paint(); return; }

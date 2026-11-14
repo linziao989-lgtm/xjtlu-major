@@ -311,7 +311,7 @@
         <div class="tl">
           <div class="tl-item">
             <div class="tl-year">大一</div>
-            <div class="tl-text">全校课程基本一致：<b>微积分 + 线性代数</b>打底，配上 EAP 英语和选修。这一年唯一要紧的事，是把两门数学考好，因为它们决定你能不能进想去的专业。</div>
+            <div class="tl-text" data-i18n="y1">全校课程基本一致：<b>微积分 + 线性代数</b>打底，配上 EAP 英语和选修。这一年唯一要紧的事，是把两门数学考好，因为它们决定你能不能进想去的专业。</div>
           </div>
           ${tl.map(([y, t]) => `<div class="tl-item"><div class="tl-year">${y}</div><div class="tl-text">${t}</div></div>`).join('')}
         </div>
