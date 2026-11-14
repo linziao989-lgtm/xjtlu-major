@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 500" preserveAspectRatio="xMidYMid slice">
+<defs>
+<linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+<stop offset="0" stop-color="#E7F7F0"/>
+<stop offset="0.55" stop-color="#ffffff"/>
+<stop offset="1" stop-color="#E7F7F0"/>
+</linearGradient>
+<radialGradient id="glow" cx="72%" cy="12%" r="72%">
+<stop offset="0" stop-color="#0E9F6E" stop-opacity="0.20"/>
+<stop offset="1" stop-color="#0E9F6E" stop-opacity="0"/>
+</radialGradient>
+</defs>
+<rect width="900" height="500" fill="url(#bg)"/>
+<rect width="900" height="500" fill="url(#glow)"/>
+<rect x="-167" y="-180" width="63" height="900" fill="#0E9F6E" fill-opacity="0.038" transform="rotate(-22 450 250)"/><rect x="-18" y="-180" width="19" height="900" fill="#0E9F6E" fill-opacity="0.058" transform="rotate(-22 450 250)"/><rect x="84" y="-180" width="69" height="900" fill="#0E9F6E" fill-opacity="0.070" transform="rotate(-22 450 250)"/><rect x="193" y="-180" width="73" height="900" fill="#0E9F6E" fill-opacity="0.038" transform="rotate(-22 450 250)"/><rect x="353" y="-180" width="75" height="900" fill="#0E9F6E" fill-opacity="0.041" transform="rotate(-22 450 250)"/><rect x="493" y="-180" width="54" height="900" fill="#0E9F6E" fill-opacity="0.043" transform="rotate(-22 450 250)"/><rect x="607" y="-180" width="63" height="900" fill="#0E9F6E" fill-opacity="0.058" transform="rotate(-22 450 250)"/><rect x="722" y="-180" width="55" height="900" fill="#0E9F6E" fill-opacity="0.073" transform="rotate(-22 450 250)"/><rect x="857" y="-180" width="24" height="900" fill="#0E9F6E" fill-opacity="0.053" transform="rotate(-22 450 250)"/><rect x="941" y="-180" width="40" height="900" fill="#0E9F6E" fill-opacity="0.034" transform="rotate(-22 450 250)"/>
+</svg>

@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>殊途 · 西浦大一专业分流参考</title>
+<meta name="description" content="西交利物浦大学大一学生专业选择参考：53 个专业的修读内容、录取依据、近年参考分数，以及按作业／期中／期末占比的分数测算。">
+<link rel="stylesheet" href="css/style.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%237C6CFF'/%3E%3Cstop offset='1' stop-color='%233D4CE0'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='9' fill='url(%23g)'/%3E%3Ccircle cx='16' cy='16' r='5' fill='white'/%3E%3C/svg%3E">
+</head>
+<body>
+
+<div class="ambient" aria-hidden="true">
+  <span class="blob b1"></span>
+  <span class="blob b2"></span>
+  <span class="blob b3"></span>
+</div>
+
+<header class="nav">
+  <a class="brand" href="#/">
+    <span class="brand-mark"></span>
+    <span class="brand-text">殊途<em>MAJOR COMPASS</em></span>
+  </a>
+  <div class="nav-right">
+    <nav class="tabs">
+      <button class="tab is-active" data-view="list">专业查询</button>
+      <button class="tab" data-view="calc">分数测算</button>
+      <button class="tab" data-view="compare">对比</button>
+      <button class="tab" data-view="guide">怎么用</button>
+    </nav>
+    <button class="lang-btn" id="langBtn" type="button" title="Switch language">EN</button>
+  </div>
+</header>
+
+<main id="app">
+
+  <!-- ================= 专业查询 ================= -->
+  <section class="view" id="view-list">
+    <div class="hero">
+      <div class="hero-art" aria-hidden="true">
+        <figure class="ha ha1" style="background-image:url('assets/covers/cs-b.svg')"></figure>
+        <figure class="ha ha2" style="background-image:url('assets/covers/arch-b.svg')"></figure>
+        <figure class="ha ha3" style="background-image:url('assets/covers/econ-b.svg')"></figure>
+        <figure class="ha ha4" style="background-image:url('assets/covers/bio-b.svg')"></figure>
+      </div>
+      <p class="eyebrow">XJTLU · YEAR 1 · 2025—26</p>
+      <h1>殊途<span class="h1-sub">西浦大一专业分流参考</span></h1>
+      <p class="lede">53 个本科专业的修读内容、录取依据、录取分数与分数测算。<br class="br-md">按参考分从高到低排列，太仓校区单列于末。</p>
+      <p class="warn-note">
+        <svg viewBox="0 0 24 24" class="icon"><path d="M12 8v5"/><circle cx="12" cy="16.6" r=".9" fill="currentColor" stroke="none"/><path d="M10.3 3.9 2.5 17.5A2 2 0 0 0 4.2 20.5h15.6a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/></svg>
+        <span data-i18n="warn">标注<b>「官方」</b>的是学校公布的 2025-26 录取分，其余为社区经验估算——两者都<b>仅供参考</b>，明年会变，请以学校 3 月发布的正式通知为准。</span>
+      </p>
+      <div class="hero-stats">
+        <div class="stat"><b id="statCount">53</b><span>个专业</span></div>
+        <div class="stat"><b>8</b><span>个学院</span></div>
+        <div class="stat"><b>2</b><span>个校区</span></div>
+        <div class="stat"><b>3 月</b><span>志愿填报</span></div>
+      </div>
+    </div>
+
+    <div class="toolbar">
+      <div class="search-wrap">
+        <svg viewBox="0 0 24 24" class="icon"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4.2-4.2"/></svg>
+        <input id="search" type="search" placeholder="搜索专业名 / 英文名 / 缩写，例如 CS、金融数学、Architecture" autocomplete="off">
+      </div>
+      <div class="chips" id="schoolChips"></div>
+      <div class="sort-bar">
+        <span class="sort-label">排序</span>
+        <button class="sort-btn is-active" data-sort="score">分数从高到低</button>
+        <button class="sort-btn" data-sort="heat">热门程度</button>
+        <button class="sort-btn" data-sort="name">专业名称</button>
+      </div>
+    </div>
+
+    <div class="grid" id="majorGrid"></div>
+
+    <div class="campus-divider" id="tcDivider">
+      <div class="cd-line"></div>
+      <div class="cd-text">
+        <span class="cd-tag">太仓校区</span>
+        <p>XJTLU Entrepreneur College (Taicang) · 产教融合，唯一不在苏州工业园区校区的学院群</p>
+      </div>
+      <div class="cd-line"></div>
+    </div>
+    <div class="grid" id="tcGrid"></div>
+
+    <p class="foot-note" id="disclaimer"></p>
+    <div class="empty is-hidden" id="emptyState">没有匹配的专业，换个关键词试试。</div>
+  </section>
+
+  <!-- ================= 分数测算 ================= -->
+  <section class="view is-hidden" id="view-calc">
+    <div class="hero hero-sm">
+      <p class="eyebrow">SCORE CALCULATOR</p>
+      <h1>期末分数测算</h1>
+      <p class="lede">选定目标专业，填入已出的作业分与期中分，<br class="br-md">倒推期末需要考到多少分才够线。</p>
+    </div>
+
+    <div class="mode-switch" id="modeSwitch">
+      <button class="mode-btn is-active" data-mode="calc">按专业算期末</button>
+      <button class="mode-btn" data-mode="find">按分数找专业</button>
+    </div>
+
+    <div class="calc-layout">
+      <!-- 左：输入 -->
+      <div class="calc-panel">
+        <div class="panel-head">
+          <span class="step-num">1</span>
+          <div>
+            <h2>选目标专业</h2>
+            <p class="hint">按参考分从高到低，可输入缩写筛选</p>
+          </div>
+        </div>
+        <select id="calcMajor" class="select"></select>
+
+        <div class="rule-card" id="ruleCard"></div>
+
+        <div class="panel-head mt">
+          <span class="step-num">2</span>
+          <div>
+            <h2>填已出分的部分</h2>
+            <p class="hint">还没考的留空即可，比如期末没考就只填作业和期中</p>
+          </div>
+        </div>
+        <div class="module-list" id="moduleList"></div>
+
+        <div class="panel-head mt">
+          <span class="step-num">3</span>
+          <div>
+            <h2>目标参考分</h2>
+            <p class="hint">默认是该专业的经验参考值，可改成你查到的实际通知分数</p>
+          </div>
+        </div>
+        <div class="target-row">
+          <input id="targetScore" class="num-input" type="number" min="0" max="100" step="0.5" value="70">
+          <div class="target-slider-wrap">
+            <input id="targetRange" type="range" min="40" max="100" step="0.5" value="70">
+            <div class="slider-marks"><span>40</span><span>60</span><span>70</span><span>85</span><span>100</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 右：结果 -->
+      <div class="result-panel" id="resultPanel"></div>
+    </div>
+
+    <div class="find-layout is-hidden" id="findLayout">
+      <div class="find-panel">
+        <div class="panel-head">
+          <span class="step-num">1</span>
+          <div>
+            <h2>填你的预估分</h2>
+            <p class="hint">按满分 100 算。估不准就填保守一点，反正下面会分档告诉你</p>
+          </div>
+        </div>
+        <div class="find-inputs">
+          <label>微积分<input id="findCalc" class="num-input" type="number" min="0" max="100" step="0.5" placeholder="—"></label>
+          <label>线性代数<input id="findLin" class="num-input" type="number" min="0" max="100" step="0.5" placeholder="—"></label>
+        </div>
+        <p class="find-hint">只按分数看：学校没公布分数的专业会被单独放到最后一组——它们不是进不去，而是没数可算。</p>
+      </div>
+      <div class="find-result" id="findResult"></div>
+    </div>
+  </section>
+
+  <!-- ================= 专业详情 ================= -->
+  <section class="view is-hidden" id="view-detail">
+    <div class="detail-hero" id="detailHero">
+      <div class="dh-photo is-hidden" id="dhPhoto"></div>
+      <div class="dh-ghost" id="dhGhost">Architecture</div>
+      <button class="back-btn" id="backBtn">
+        <svg viewBox="0 0 24 24" class="icon"><path d="M15 5l-7 7 7 7"/></svg>
+        返回列表
+      </button>
+      <button class="fav big" id="dhFav" title="收藏">★</button>
+      <div class="dh-inner">
+        <div class="dh-head">
+          <span class="abbr big" id="dhAbbr">ARCH</span>
+          <div class="dh-chips" id="dhChips"></div>
+        </div>
+        <h1 id="dhName"></h1>
+        <p class="dh-en" id="dhEn"></p>
+      </div>
+    </div>
+
+    <div class="detail-body" id="detailBody"></div>
+  </section>
+
+  <!-- ================= 怎么用 ================= -->
+  <section class="view is-hidden" id="view-compare">
+    <div class="hero hero-sm">
+      <p class="eyebrow">COMPARE</p>
+      <h1>专业对比</h1>
+      <p class="lede">最多选三个专业，把分数、先修、课程和出路并排放在一张表里。</p>
+    </div>
+    <div class="cmp-slots" id="cmpSlots"></div>
+    <div class="cmp-table-wrap" id="cmpTable"></div>
+  </section>
+
+  <section class="view is-hidden" id="view-guide">
+    <div class="hero hero-sm">
+      <p class="eyebrow">HOW TO USE</p>
+      <h1>怎么用这个站</h1>
+      <p class="lede">三步走完：先看清楚，再算明白，最后排志愿。<br class="br-md">下面也写清楚了每个数字是怎么来的、哪些只是估算。</p>
+    </div>
+
+    <div class="guide-steps">
+      <div class="g-step">
+        <div class="g-num">01</div>
+        <h3>按分数和学院筛出候选</h3>
+        <p>专业查询页默认按参考分从高到低排，太仓校区的 8 个专业单独放在最下方。顶部可以按学院筛、按缩写搜（CS、FM、ARCH 这类），点卡片右下角的 ★ 收藏，收藏栏会一直留在最前面。</p>
+        <p class="g-tip">建议先收藏 5 个左右，因为志愿要填一串，不是一个。</p>
+      </div>
+
+      <div class="g-step">
+        <div class="g-num">02</div>
+        <h3>点开详情，看它到底学什么</h3>
+        <p>每页都写了这个专业的修读内容、适合什么样的人、毕业去向、申研去向，以及大一要先修哪些课、录取看哪几门。顶部那个大数字是参考分，右边三年小方块是趋势。</p>
+        <p class="g-tip">「大一上需修」这一栏最重要：修错了课，分数再高也进不去。</p>
+      </div>
+
+      <div class="g-step">
+        <div class="g-num">03</div>
+        <h3>算出期末还要考多少</h3>
+        <p>到分数测算页选定这个专业，把已经出的作业分、期中分填进去，期末先留空。右侧会直接算出「期末考试至少要考多少」，并且在输入框下面用蓝色标出每一门的缺口。</p>
+        <p class="g-tip">目标分默认是该专业的参考分，可以手动改成你查到的实际通知分数。</p>
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-label">三个前提，别忽略</div>
+      <div class="notes-grid">
+        <div class="note-card">
+          <b>分数分两种口径</b>
+          <p>标着<b>「官方」</b>的 16 个专业，用的是学校公布的 2025-26 录取分；其余标<b>「参考分」</b>的是社区经验估算。两种都只能横向比冷热——真实结果按当年容量和报名情况浮动，明年会变。</p>
+        </div>
+        <div class="note-card">
+          <b>考核占比是估算的</b>
+          <p>官方课程目录只写学分和教学目标，不写作业／期中／期末的权重。默认按 <b>15 / 20 / 65</b> 算，<b>请以课程大纲上的真实比例为准</b>，每门课点「占比」就能改。</p>
+        </div>
+        <div class="note-card">
+          <b>EAP 和选修不算录取分</b>
+          <p>专业分流只看大一上的微积分（部分专业加线代）。EAP 英语和大一选修只影响学位等级，所以站里把它们标成「不计入录取」。</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-label">常见问题</div>
+      <div class="faq">
+        <details>
+          <summary>为什么有的专业显示「无门槛」？</summary>
+          <p>传播、翻译、设计、影视这类专业不按分数卡人，报名人数超过容量时按志愿顺序和材料综合判断。没有分数线，但热门年份一样会满，别当保底。</p>
+        </details>
+        <details>
+          <summary>算出来超过 100 分是什么意思？</summary>
+          <p>意思是按目前已经出分的成绩，剩下的部分即使考满分也够不到目标分。这时要么把目标降到更现实的分数，要么把重心换到别的专业。</p>
+        </details>
+        <details>
+          <summary>为什么同一门课，我算出来的权重和别人的不一样？</summary>
+          <p>因为权重跟着专业走。计算机这类要看微积分加线代（各 50%），会计、经济这类只看微积分（100%），所以同一门课在不同专业里的分量不同。</p>
+        </details>
+        <details>
+          <summary>收藏会丢吗？</summary>
+          <p>收藏存在你浏览器本地，刷新、关掉再打开都还在；换浏览器或用无痕模式就没了。</p>
+        </details>
+        <details>
+          <summary>数据多久更新一次？</summary>
+          <p>专业清单与先修要求依据 2025-26 学年的官方注册指南；参考分与热度是近三年的社区估算。学校正式通知出来后，以通知为准。</p>
+        </details>
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-label">数据来源与口径</div>
+      <div class="src-wrap">
+        <table class="src-table">
+          <thead><tr><th>内容</th><th>来源</th><th>口径与限制</th><th>更新</th></tr></thead>
+          <tbody>
+            <tr><td>专业清单、中英文名、学位</td><td>XJTLU 官网本科专业页</td><td>53 个专业，含太仓 8 个</td><td>2025-26 学年</td></tr>
+            <tr><td>大一课程结构、先修要求</td><td>《Year 1 Registration Guide 2025-26》</td><td>只看大一第一学期；学校每年可能微调</td><td>2025-26 学年</td></tr>
+            <tr><td>录取分（18 个专业）</td><td>学校每年 3 月公布的录取结果表</td><td>标「官方」；其余学校不公布，页面写「未公布」</td><td>2025-26</td></tr>
+            <tr><td>近三年分数（15 个专业）</td><td>学校历年录取结果表</td><td>仅作趋势参考，各年口径一致</td><td>23-24 → 25-26</td></tr>
+            <tr><td>作业 / 期中 / 期末占比</td><td>无官方来源</td><td>默认 15 / 20 / 65 是常见结构，可逐门改</td><td>随时可改</td></tr>
+            <tr><td>核心课程</td><td>Module Catalogue</td><td>代表性模块，不是完整培养方案</td><td>2025-26</td></tr>
+            <tr><td>年薪区间</td><td>公开招聘平台同类岗位</td><td>一线／新一线、毕业 3–5 年、税前，只判断量级</td><td>2025</td></tr>
+            <tr><td>详情页照片</td><td>Pexels（Pexels License）</td><td>按专业主题检索，示意性质</td><td>—</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="src-note">最后核对：2025 年 11 月。分数、占比、年薪三类都不是学校官方数据，只用于判断量级与冷热。</p>
+    </div>
+
+    <p class="foot-note" id="guideFootnote"></p>
+  </section>
+
+</main>
+
+<script src="js/data.js"></script>
+<script src="js/content.js"></script>
+<script src="js/careers.js"></script>
+<script src="js/salary.js"></script>
+<script src="js/extra.js"></script>
+<script src="js/courses.js"></script>
+<script src="js/app.js"></script>
+  <script src="js/i18n.js"></script>
+</body>
+</html>
