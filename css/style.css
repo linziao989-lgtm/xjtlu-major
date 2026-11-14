@@ -1072,5 +1072,13 @@ input[type=range]::-moz-range-thumb {
 
 
 /* 英文模式下专业副标题与标题重复，隐藏 */
-html[lang="en"] .card h3 + .en,
+html[lang="en"] .card .card-en,
 html[lang="en"] .dh-en { display: none; }
+
+
+/* 语言切换时只关掉过渡动画（不要碰 animation：卡片与首页配图靠它出场） */
+html.lang-busy *,
+html.lang-busy *::before,
+html.lang-busy *::after {
+  transition: none !important;
+}

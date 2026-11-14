@@ -167,7 +167,22 @@
     '生命与自然科学学院': 'School of Science',
     '影视与创意科技学院': 'Academy of Film & Creative Technology',
     '太仓创业家学院': 'Entrepreneur College (Taicang)',
-    '苏州校区': 'Suzhou campus'
+    '苏州校区': 'Suzhou campus',
+    '/ 100 参考': '/ 100 est.',
+    '常见去向：': 'Common destinations: ',
+    '劝退点：': 'Reality check: ',
+    '微积分': 'Calculus',
+    '线性代数': 'Linear Algebra',
+    '多元微积分': 'Multivariable Calculus',
+    '物理': 'Physics',
+    '微积分 + 线性代数': 'Calculus + Linear Algebra',
+    '物理 + 多元微积分': 'Physics + Multivariable Calculus',
+    '无先修要求': 'None',
+    '无': 'None',
+    '看微积分': 'Calculus only',
+    '看微积分 + 线代': 'Calculus + Linear Algebra',
+    '已填': 'filled',
+    '未填': 'blank',
   };
 
   /* 含内联标签的整段 */
@@ -211,19 +226,40 @@
     node.nodeValue = raw.match(/^\s*/)[0] + out + raw.match(/\s*$/)[0];
   }
 
-  function walk(root) {
+  let done = new WeakSet();
+  const doneRef = { clear() { done = new WeakSet(); } };
+
+  function walkRoot(root) {
+    if (!root) return;
     walkHtml(root);
     const w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
-      acceptNode: n => (n.parentElement && SKIP.has(n.parentElement.tagName))
-        ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT
+      acceptNode: n => {
+        if (!n.parentElement) return NodeFilter.FILTER_REJECT;
+        if (SKIP.has(n.parentElement.tagName)) return NodeFilter.FILTER_REJECT;
+        if (done.has(n)) return NodeFilter.FILTER_REJECT;
+        return NodeFilter.FILTER_ACCEPT;
+      }
     });
     const list = [];
     while (w.nextNode()) list.push(w.currentNode);
-    list.forEach(applyText);
+    for (let i = 0; i < list.length; i++) { done.add(list[i]); applyText(list[i]); }
     root.querySelectorAll('input[placeholder]').forEach(el => {
       const key = el.placeholder.trim();
       if (DICT[key]) { if (!el.dataset.zhPh) el.dataset.zhPh = el.placeholder; el.placeholder = DICT[key]; }
     });
+  }
+
+  /* 只翻导航 + 当前显示的视图，隐藏的视图等切过去再翻 */
+  function walk(root) {
+    const nav = document.querySelector('.nav');
+    if (nav) walkRoot(nav);
+    if (root === document.body) {
+      document.querySelectorAll('.view').forEach(v => {
+        if (!v.classList.contains('is-hidden')) walkRoot(v);
+      });
+      return;
+    }
+    walkRoot(root);
   }
 
   function walkHtml(root) {
@@ -242,6 +278,7 @@
       const n = w.currentNode;
       if (origin.has(n)) n.nodeValue = origin.get(n);
     }
+    doneRef.clear();
     if (root.querySelectorAll) {
       root.querySelectorAll('[data-i18n]').forEach(el => {
         if (htmlOrigin.has(el)) el.innerHTML = htmlOrigin.get(el);
@@ -256,10 +293,17 @@
   const mainEl = () => document.body;
 
   function setLang(lang) {
+    if (lang === current) { paint(); return; }
     current = lang;
+    document.documentElement.classList.add('lang-busy');
+    requestAnimationFrame(() => {
+      const t0 = performance.now();
+      if (lang === 'en') walk(document.body); else restore(document.body);
+      window.__langMs = +(performance.now() - t0).toFixed(1);
+      requestAnimationFrame(() => document.documentElement.classList.remove('lang-busy'));
+    });
     document.documentElement.lang = lang === 'en' ? 'en' : 'zh-CN';
     try { localStorage.setItem('xjtlumajor.lang', lang); } catch (e) {}
-    if (lang === 'en') walk(mainEl()); else restore(mainEl());
     paint();
   }
 
@@ -276,10 +320,19 @@
     const btn = document.getElementById('langBtn');
     if (btn) btn.addEventListener('click', () => setLang(current === 'en' ? 'zh' : 'en'));
 
-    new MutationObserver(() => {
+    const pending = new Set();
+    new MutationObserver(records => {
       if (current !== 'en') return;
+      records.forEach(r => r.addedNodes.forEach(n => {
+        if (n.nodeType === 1) pending.add(n);
+        else if (n.nodeType === 3 && n.parentElement) pending.add(n.parentElement);
+      }));
+      if (!pending.size) return;
       clearTimeout(timer);
-      timer = setTimeout(() => walk(mainEl()), 40);
+      timer = setTimeout(() => {
+        pending.forEach(n => { if (n.isConnected) walkRoot(n); });
+        pending.clear();
+      }, 50);
     }).observe(mainEl(), { childList: true, subtree: true });
 
     let saved = 'zh';
