@@ -238,7 +238,7 @@
   const PATTERNS = [
     [/^(\d+) 个$/, '$1'],
     [/^(\d+) 月$/, 'March'],
-    [/^参考年薪 (\d+)–(\d+) 万$/, (m) => '≈ CNY ' + m[1] + '0–' + m[2] + '0k / yr'],
+    [/^参考年薪 (\d+)–(\d+) 万$/, (m, a, b) => '≈ CNY ' + a + '0–' + b + '0k / yr'],
     [/^剩余考 (\d+)$/, 'If you score $1'],
 
     [/^★ 收藏 (\d+)$/, '★ Saved $1'],
@@ -259,8 +259,9 @@
 
   function applyText(node) {
     const raw = node.nodeValue;
-    const key = raw.trim();
-    if (!key || origin.has(node)) return;
+    const base = origin.get(node) || raw;
+    const key = base.trim();
+    if (!key) return;
     let out = DICT[key];
     if (!out && window.EN_MAP) {
       const cand = window.EN_MAP[key];
@@ -271,7 +272,7 @@
     }
     if (!out) return;
     if (!origin.has(node)) origin.set(node, raw);
-    node.nodeValue = raw.match(/^\s*/)[0] + out + raw.match(/\s*$/)[0];
+    node.nodeValue = base.match(/^\s*/)[0] + out + base.match(/\s*$/)[0];
   }
 
   let done = new WeakSet();
@@ -341,16 +342,22 @@
   const mainEl = () => document.body;
 
   window.__setLang = (l) => setLang(l);
+  window.i18nRefresh = () => { if (current === 'en') walk(document.body); };
+  window.__walkRoot = (n) => { doneRef.clear(); walkRoot(n); };
 
   function setLang(lang) {
     if (lang === current) { paint(); return; }
     current = lang;
     document.documentElement.classList.add('lang-busy');
     requestAnimationFrame(() => {
+      doneRef.clear();
       const t0 = performance.now();
       if (lang === 'en') walk(document.body); else restore(document.body);
       window.__langMs = +(performance.now() - t0).toFixed(1);
-      requestAnimationFrame(() => document.documentElement.classList.remove('lang-busy'));
+      requestAnimationFrame(() => {
+        document.documentElement.classList.remove('lang-busy');
+        if (typeof rerenderView === 'function') rerenderView();
+      });
     });
     document.documentElement.lang = lang === 'en' ? 'en' : 'zh-CN';
     try { localStorage.setItem('xjtlumajor.lang', lang); } catch (e) {}
@@ -362,6 +369,62 @@
     if (btn) btn.textContent = current === 'en' ? '中文' : 'EN';
   }
 
+
+  /* ---------- 渲染期翻译（英文模式下拦截 innerHTML） ---------- */
+  let i18nBusy = false;
+  let i18nDepth = 0;
+
+  function translateHtml(html) {
+    if (typeof html !== 'string' || !html) return html;
+    if (i18nDepth > 0) return html;
+    i18nDepth++;
+    i18nBusy = true;
+    let out = html;
+    try {
+      const box = document.createElement('div');
+      box.innerHTML = html;
+      walkRoot(box);
+      out = box.innerHTML;
+    } catch (e) {
+      out = html;
+    } finally {
+      i18nBusy = false;
+      i18nDepth--;
+    }
+    return out;
+  }
+
+  (function installInnerHtmlHook() {
+    const desc = Object.getOwnPropertyDescriptor(Element.prototype, 'innerHTML');
+    if (!desc || !desc.set) return;
+    Object.defineProperty(Element.prototype, 'innerHTML', {
+      configurable: true,
+      get() { return desc.get.call(this); },
+      set(v) { desc.set.call(this, current === 'en' && !i18nBusy ? translateHtml(v) : v); }
+    });
+  })();
+
+  function rerenderView() {
+    try { window.dispatchEvent(new HashChangeEvent('hashchange')); } catch (e) {}
+  }
+
+  function lookup(str) {
+    const k = String(str).trim();
+    if (!k) return str;
+    let out = DICT[k];
+    if (!out && typeof window !== 'undefined' && window.EN_MAP) {
+      const cand = window.EN_MAP[k];
+      if (cand && !BAD_TR.test(cand)) out = cand;
+    }
+    if (!out) {
+      for (const [re, rep] of PATTERNS) {
+        if (re.test(k)) { out = k.replace(re, rep); break; }
+      }
+    }
+    return out || str;
+  }
+
+  window.tr = function (str) { return current === 'en' ? lookup(String(str)) : String(str); };
   window.setLang = setLang;
   window.getLang = () => current;
 
@@ -373,17 +436,24 @@
     const pending = new Set();
     new MutationObserver(records => {
       if (current !== 'en') return;
-      records.forEach(r => r.addedNodes.forEach(n => {
-        if (n.nodeType === 1) pending.add(n);
-        else if (n.nodeType === 3 && n.parentElement) pending.add(n.parentElement);
-      }));
+      records.forEach(r => {
+        if (r.type === 'characterData') {
+          const t = r.target;
+          if (t && t.nodeType === 3) pending.add(t.parentElement || t);
+          return;
+        }
+        r.addedNodes.forEach(n => {
+          if (n.nodeType === 1) pending.add(n);
+          else if (n.nodeType === 3 && n.parentElement) pending.add(n.parentElement);
+        });
+      });
       if (!pending.size) return;
       clearTimeout(timer);
       timer = setTimeout(() => {
         pending.forEach(n => { if (n.isConnected) walkRoot(n); });
         pending.clear();
       }, 50);
-    }).observe(mainEl(), { childList: true, subtree: true });
+    }).observe(mainEl(), { childList: true, subtree: true, characterData: true });
 
     let saved = 'zh';
     try { saved = localStorage.getItem('xjtlumajor.lang') || 'zh'; } catch (e) {}

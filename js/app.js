@@ -187,18 +187,19 @@
   }
 
   function bindCareerHover() {
+    const T = (window.tr || (x => x));
     const note = $('#careerNote');
     const chips = $$('.career-chip');
     if (!note || !chips.length) return;
     const show = chip => {
       chips.forEach(c => c.classList.toggle('is-on', c === chip));
       note.classList.remove('is-empty');
-      note.querySelector('.cn-term').textContent = chip.dataset.term;
-      note.querySelector('.cn-body').textContent = careerText(chip.dataset.term);
+      note.querySelector('.cn-term').textContent = T(chip.dataset.term);
+      note.querySelector('.cn-body').textContent = T(careerText(chip.dataset.term));
       const pay = note.querySelector('.cn-pay');
       const s = salaryOf(chip.dataset.term);
       if (pay) {
-        pay.textContent = s ? `参考年薪 ${s} 万` : '';
+        pay.textContent = s ? T(`参考年薪 ${s} 万`) : '';
         pay.classList.toggle('is-hidden', !s);
       }
     };
