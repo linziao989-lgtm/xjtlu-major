@@ -21,6 +21,8 @@
     '没有匹配的专业，换个关键词试试。': 'No programme matched. Try another keyword.',
     '返回列表': 'Back to list',
     '全部': 'All',
+    '+ 再加一个': '+ Add another',
+    '再加一个': 'Add another',
     '搜索专业名 / 英文名 / 缩写，例如 CS、金融数学、Architecture': 'Search by name, English name or abbreviation — e.g. CS, architecture',
     '收藏': 'Saved',
     '看微积分': 'Calculus only',
@@ -46,7 +48,7 @@
     /* 测算页 */
     '期末分数测算': 'Score calculator',
     '选定目标专业，填入已出的作业分与期中分，': 'Pick a target programme, enter the marks you already have, and see what the final exam needs to be.',
-    '倒推期末需要考到多少分才够线。': '',
+    '倒推期末需要考到多少分才够线。': 'Work backwards from the mark you still need.',
     '按专业算期末': 'Target → mark',
     '按分数找专业': 'Mark → programmes',
     '选目标专业': 'Choose a programme',
@@ -238,6 +240,10 @@
   const PATTERNS = [
     [/^(\d+) 个$/, '$1'],
     [/^(\d+) 月$/, 'March'],
+    [/^目标 ([\d.]+)$/, 'Target $1'],
+    [/^([\d.]+) 学分 · 占录取 (\d+)%$/, '$1 credits · $2% of admission'],
+    [/^([\d.]+) 学分，只影响学位等级$/, '$1 credits — degree classification only'],
+
     [/^参考年薪 (\d+)–(\d+) 万$/, (m, a, b) => '≈ CNY ' + a + '0–' + b + '0k / yr'],
     [/^剩余考 (\d+)$/, 'If you score $1'],
 
@@ -362,6 +368,7 @@
     document.documentElement.lang = lang === 'en' ? 'en' : 'zh-CN';
     try { localStorage.setItem('xjtlumajor.lang', lang); } catch (e) {}
     paint();
+    if (typeof window.__rerender === 'function' && current === 'en') { try { window.__rerender(); } catch (e) {} }
   }
 
   function paint() {
@@ -428,8 +435,9 @@
   window.setLang = setLang;
   window.getLang = () => current;
 
+  absorbMajorNames();
+
   window.addEventListener('DOMContentLoaded', () => {
-    absorbMajorNames();
     const btn = document.getElementById('langBtn');
     if (btn) btn.addEventListener('click', () => setLang(current === 'en' ? 'zh' : 'en'));
 

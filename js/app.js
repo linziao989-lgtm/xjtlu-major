@@ -8,6 +8,8 @@
   const META = window.XJTLU_META || {};
   const { schools, modules, majors, disclaimer } = DB;
 
+  function tr(x) { return window.tr ? window.tr(x) : x; }
+
   /* ---------- 工具 ---------- */
   const $  = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
@@ -187,19 +189,18 @@
   }
 
   function bindCareerHover() {
-    const T = (window.tr || (x => x));
     const note = $('#careerNote');
     const chips = $$('.career-chip');
     if (!note || !chips.length) return;
     const show = chip => {
       chips.forEach(c => c.classList.toggle('is-on', c === chip));
       note.classList.remove('is-empty');
-      note.querySelector('.cn-term').textContent = T(chip.dataset.term);
-      note.querySelector('.cn-body').textContent = T(careerText(chip.dataset.term));
+      note.querySelector('.cn-term').textContent = tr(chip.dataset.term);
+      note.querySelector('.cn-body').textContent = tr(careerText(chip.dataset.term));
       const pay = note.querySelector('.cn-pay');
       const s = salaryOf(chip.dataset.term);
       if (pay) {
-        pay.textContent = s ? T(`参考年薪 ${s} 万`) : '';
+        pay.textContent = s ? tr(`参考年薪 ${s} 万`) : '';
         pay.classList.toggle('is-hidden', !s);
       }
     };
@@ -325,7 +326,7 @@
         <div class="req-grid">
           <div class="req-item"><div class="req-k">大一上需修</div><div class="req-v">${m.pre1}</div></div>
           <div class="req-item"><div class="req-k">大一下需修</div><div class="req-v">${m.pre2}</div></div>
-          <div class="req-item"><div class="req-k">录取看什么</div><div class="req-v">${basisText[m.basis]}</div></div>
+          <div class="req-item"><div class="req-k">录取看什么</div><div class="req-v">${basisPlain(m)}</div></div>
           <div class="req-item"><div class="req-k">分数口径</div><div class="req-v">${hasScore
             ? '社区经验估算，官方从不公布；只用来比较专业冷热，不能当承诺。'
             : '无分数门槛，满足先修课程即可报名。'}</div></div>
@@ -371,10 +372,10 @@
   }
 
   function buildCalcSelect() {
-    const opt = m => `<option value="${m.id}">${m.abbr} · ${m.basis === 'n' ? '无门槛' : (m.official ? num(m.score) : '未公布')} · ${m.name}</option>`;
+    const opt = m => `<option value="${m.id}">${m.abbr} · ${tr(m.basis === 'n' ? '无门槛' : (m.official ? String(num(m.score)) : '未公布'))} · ${tr(m.name)}</option>`;
     $('#calcMajor').innerHTML =
-      `<optgroup label="苏州校区">${suzhou.map(opt).join('')}</optgroup>` +
-      `<optgroup label="太仓校区">${taicang.map(opt).join('')}</optgroup>`;
+      `<optgroup label="${tr('苏州校区')}">${suzhou.map(opt).join('')}</optgroup>` +
+      `<optgroup label="${tr('太仓校区')}">${taicang.map(opt).join('')}</optgroup>`;
   }
 
   function currentMajor() { return byId[state.calcMajor]; }
@@ -389,11 +390,20 @@
     $('#targetRange').value = state.target;
     syncRangeFill();
 
+    const EN = !!(window.getLang && window.getLang() === 'en');
+    const basisEN = {
+      cl: 'the average of <b>Calculus</b> and <b>Linear Algebra</b> in Semester 1',
+      c: '<b>Calculus</b> in Semester 1',
+      n: '<b>no mark threshold</b> — offers follow application order and capacity',
+      lang: 'completing <b>two stages of a second foreign language</b>'
+    };
     $('#ruleCard').innerHTML = `
-      <div class="rl-title">这个专业怎么录取</div>
-      ${basisText[m.basis]}${m.basis === 'n' ? '。' : '，达到这条线就有机会被录取。'}<br>
-      <span class="rule-dim">大一上需修：${m.pre1}　·　大一下需修：${m.pre2}</span>
-      ${(m.basis !== 'n' && !m.official) ? '<div class="rule-warn">这个专业没有公布录取分，下面的目标分是占位值 70，请改成你从学长学姐那里问到的实际分数。</div>' : ''}`;
+      <div class="rl-title">${EN ? 'How admission works' : '这个专业怎么录取'}</div>
+      ${EN ? basisEN[m.basis] + (m.basis === 'n' ? '.' : ' — reach this line and you have a chance.') : basisText[m.basis] + (m.basis === 'n' ? '。' : '，达到这条线就有机会被录取。')}<br>
+      <span class="rule-dim">${EN ? 'Semester 1: ' + tr(m.pre1) + '　·　Semester 2: ' + tr(m.pre2) : '大一上需修：' + m.pre1 + '　·　大一下需修：' + m.pre2}</span>
+      ${(m.basis !== 'n' && !m.official) ? (EN
+        ? '<div class="rule-warn">This programme does not publish its admission mark. The target below is a placeholder (70) — replace it with a figure you have actually heard.</div>'
+        : '<div class="rule-warn">这个专业没有公布录取分，下面的目标分是占位值 70，请改成你从学长学姐那里问到的实际分数。</div>') : ''}`;
 
     $('#moduleList').innerHTML = modules.map(mod => {
       const isCounted = counted.includes(mod.id);
@@ -539,9 +549,14 @@
       desc = `已出分的部分已经够了，剩下的 <b>${groupsText}</b> <b>只要及格</b>就能达到 <b>${T}</b>。`;
       status = '已经很稳了'; cls = 'ok';
     } else if (allBlank) {
-      big = f1(need); unit = '分'; label = '平均每部分需要';
-      desc = `还什么都没填。按 <b>${T}</b> 的目标，每个部分平均要考到 <b>${f1(need)}</b> 分，也就是每门课的总分都要在 ${f1(need)} 上下。`;
-      status = need <= 70 ? '压力不大' : need <= 85 ? '需要认真准备' : '难度很高';
+      const EN = !!(window.getLang && window.getLang() === 'en');
+      big = f1(need); unit = EN ? 'pts' : '分'; label = EN ? 'Average needed per part' : '平均每部分需要';
+      desc = EN
+        ? `Nothing entered yet. Against a target of <b>${T}</b>, every part has to average <b>${f1(need)}</b>, so each module needs to land around ${f1(need)} overall.`
+        : `还什么都没填。按 <b>${T}</b> 的目标，每个部分平均要考到 <b>${f1(need)}</b> 分，也就是每门课的总分都要在 ${f1(need)} 上下。`;
+      status = EN
+        ? (need <= 70 ? 'Comfortable' : need <= 85 ? 'Serious prep' : 'Very demanding')
+        : (need <= 70 ? '压力不大' : need <= 85 ? '需要认真准备' : '难度很高');
       cls = need <= 70 ? 'ok' : need <= 85 ? 'mid' : 'bad';
     } else {
       big = f1(need); unit = '分';
@@ -628,11 +643,20 @@
     return m.official ? num(m.score) : '未公布';
   }
 
+  function basisPlain(m) {
+    const EN = !!(window.getLang && window.getLang() === 'en');
+    if (!EN) return basisText[m.basis];
+    if (m.basis === 'cl') return 'the average of Calculus and Linear Algebra in Semester 1';
+    if (m.basis === 'c') return 'your Calculus mark in Semester 1';
+    if (m.basis === 'n') return 'no mark threshold — preference order and capacity';
+    return 'two stages of a second foreign language';
+  }
+
   function renderCompare() {
     const slots = $('#cmpSlots');
     const opts = sel => '<option value="">— 选一个专业 —</option>' +
-      suzhou.map(m => `<option value="${m.id}"${sel === m.id ? ' selected' : ''}>${m.abbr} · ${m.name}</option>`).join('') +
-      taicang.map(m => `<option value="${m.id}"${sel === m.id ? ' selected' : ''}>${m.abbr} · ${m.name}（太仓）</option>`).join('');
+      suzhou.map(m => `<option value="${m.id}"${sel === m.id ? ' selected' : ''}>${m.abbr} · ${tr(m.name)}</option>`).join('') +
+      taicang.map(m => `<option value="${m.id}"${sel === m.id ? ' selected' : ''}>${m.abbr} · ${tr(m.name)}${tr('（太仓）')}</option>`).join('');
 
     slots.innerHTML = state.compare.map((id, i) => `
       <div class="cmp-slot">
@@ -663,7 +687,7 @@
         </thead>
         <tbody>
           ${row('2025-26 录取分', m => `<b class="cmp-num">${scoreText(m)}</b>`)}
-          ${row('录取看什么', m => basisText[m.basis])}
+          ${row('录取看什么', m => basisPlain(m))}
           ${row('大一上需修', m => m.pre1)}
           ${row('大一下需修', m => m.pre2)}
           ${row('火爆程度', m => heatHTML(m.heat))}
@@ -930,4 +954,11 @@
 
   window.addEventListener('hashchange', route);
   route();
+  window.__rerender = function () {
+    try {
+      renderList(true);
+      if (location.hash.indexOf('calc') > -1) { buildCalcSelect(); renderCalc(); }
+      else if (location.hash.indexOf('/m/') > -1) { }
+    } catch (e) {}
+  };
 })();
