@@ -21,6 +21,15 @@
     '没有匹配的专业，换个关键词试试。': 'No programme matched. Try another keyword.',
     '返回列表': 'Back to list',
     '全部': 'All',
+    '看 微积分 + 线代': 'Calculus + linear algebra',
+    '看 微积分': 'Calculus only',
+    '无分数门槛': 'No mark threshold',
+    '★ 收藏': '★ Saved',
+    '太仓校区': 'Taicang campus',
+    '苏州校区': 'Suzhou campus',
+    'XJTLU Entrepreneur College (Taicang) · 产教融合，唯一不在苏州工业园区校区的学院群':
+      'XJTLU Entrepreneur College (Taicang) · industry-integrated, the only school outside the Suzhou Industrial Park campus',
+
     '+ 再加一个': '+ Add another',
     '再加一个': 'Add another',
     '搜索专业名 / 英文名 / 缩写，例如 CS、金融数学、Architecture': 'Search by name, English name or abbreviation — e.g. CS, architecture',
@@ -228,7 +237,10 @@
     'basis-cl': 'The average of <b>Calculus</b> and <b>Linear Algebra</b> in Semester 1',
     'basis-c': 'Your <b>Calculus</b> mark in Semester 1',
     'basis-n': '<b>No mark threshold</b> — admitted by preference order and capacity',
-    'basis-lang': 'Requires <b>two stages of a second foreign language</b>'
+    'basis-lang': 'Requires <b>two stages of a second foreign language</b>',
+    'caveat1': 'The 16 programmes marked <b>official</b> use the school\'s published 2025-26 admission mark; the rest are community estimates. Both only help you compare how competitive a programme is — the real cut-off moves with capacity and applications every year.',
+    'caveat2': 'The official catalogue lists credits and learning outcomes, not the coursework / midterm / final split. The default is <b>15 / 20 / 65</b> — <b>check your module outline for the real ratio</b>; you can edit it per module.',
+    'caveat3': 'Admission looks at Semester-1 Calculus (plus Linear Algebra for some programmes). EAP and Year-1 electives only affect your degree classification, which is why they are marked "not counted" here.'
   };
 
   function absorbMajorNames() {
@@ -240,6 +252,8 @@
   const PATTERNS = [
     [/^(\d+) 个$/, '$1'],
     [/^(\d+) 月$/, 'March'],
+    [/^(B[A-Za-z]*) · 4 年$/, '$1 · 4 yrs'],
+
     [/^目标 ([\d.]+)$/, 'Target $1'],
     [/^([\d.]+) 学分 · 占录取 (\d+)%$/, '$1 credits · $2% of admission'],
     [/^([\d.]+) 学分，只影响学位等级$/, '$1 credits — degree classification only'],

@@ -140,7 +140,7 @@
   function renderChips() {
     const used = [...new Set(majors.map(m => m.school))];
     const favChip = `<button class="chip fav-chip${state.favOnly ? ' is-on' : ''}" data-favfilter="1">
-        ★ 收藏 <b>${favs.size}</b>
+        ${tr('★ 收藏')} <b>${favs.size}</b>
       </button>`;
     const items = [['all', '全部']].concat(used.map(k => [k, schools[k].cn]));
     $('#schoolChips').innerHTML = favChip + items.map(([k, label]) => {
@@ -232,9 +232,9 @@
 
     $('#dhChips').innerHTML = `
       <span class="dh-chip">${s.cn}</span>
-      <span class="dh-chip plain">${m.campus === 'taicang' ? '太仓校区' : '苏州校区'}</span>
+      <span class="dh-chip plain">${tr(m.campus === 'taicang' ? '太仓校区' : '苏州校区')}</span>
       <span class="dh-chip plain">${m.degree} · 4 年</span>
-      <span class="dh-chip plain">${m.basis === 'n' ? '无分数门槛' : '看 ' + (m.basis === 'cl' ? '微积分 + 线代' : '微积分')}</span>
+      <span class="dh-chip plain">${tr(m.basis === 'n' ? '无分数门槛' : '看 ' + (m.basis === 'cl' ? '微积分 + 线代' : '微积分'))}</span>
       ${heatHTML(m.heat)}`;
 
     const hasScore = m.basis !== 'n';

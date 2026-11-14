@@ -1082,3 +1082,7 @@ html.lang-busy *::before,
 html.lang-busy *::after {
   transition: none !important;
 }
+
+
+/* 英文模式下卡片底栏的「热度」标签（CSS content 无法走文本翻译） */
+html[lang="en"] .card-foot .heat::before { content: 'Demand'; }
