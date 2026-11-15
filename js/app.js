@@ -254,7 +254,7 @@
       <div class="score-hero" style="--c:${s.color};--cs:${s.soft}">
         <div class="sh-num ${hasScore && m.official ? '' : 'na'}">
           <b>${!hasScore ? '无门槛' : (m.official ? num(m.score) : '未公布')}</b>
-          ${!hasScore ? '<span>按志愿与容量录取</span>' : (m.official ? '<span>/ 100 参考</span>' : '<span>学校不公布</span>')}
+          ${!hasScore ? '<span>' + tr('按志愿与容量录取') + '</span>' : (m.official ? '<span>' + tr('/ 100 参考') + '</span>' : ((window.getLang && window.getLang() === 'en') ? '' : '<span>学校不公布</span>'))}
         </div>
         <div class="sh-txt">
           <h4>${!hasScore ? '录取方式' : (m.official ? '2025-26 录取分 · 大一上' : '录取分 · 未公布')}</h4>
@@ -372,6 +372,7 @@
   }
 
   function buildCalcSelect() {
+    selectLang = (window.getLang ? window.getLang() : 'zh');
     const opt = m => `<option value="${m.id}">${m.abbr} · ${tr(m.basis === 'n' ? '无门槛' : (m.official ? String(num(m.score)) : '未公布'))} · ${tr(m.name)}</option>`;
     $('#calcMajor').innerHTML =
       `<optgroup label="${tr('苏州校区')}">${suzhou.map(opt).join('')}</optgroup>` +
@@ -380,7 +381,11 @@
 
   function currentMajor() { return byId[state.calcMajor]; }
 
+  let selectLang = null;
+
   function renderCalc() {
+    const langNow = (window.getLang ? window.getLang() : 'zh');
+    if (selectLang !== langNow) { buildCalcSelect(); selectLang = langNow; }
     const m = currentMajor();
     const counted = countedIds(m.basis);
     const sumCred = modules.filter(x => counted.includes(x.id)).reduce((a, x) => a + x.cred, 0);
@@ -616,8 +621,9 @@
 
         <div class="rc-divider"></div>
         <p class="rc-note">
-          计算口径：<b>${r.mods.map(x => x.name).join(' + ')}</b> 按学分权重折算，再按各科「作业 / 期中 / 期末」占比合成。<br>
-          占比为常见结构，可在左侧逐门调整；分数并非官方发布，当参考就好。
+          ${(window.getLang && window.getLang() === 'en')
+            ? `How this is worked out: <b>${r.mods.map(x => x.name).join(' + ')}</b> are weighted by credits, then blended from each module's coursework / midterm / final shares.<br>The split is a common structure — adjust it on the left. The mark is not officially published; treat it as a reference.`
+            : `计算口径：<b>${r.mods.map(x => x.name).join(' + ')}</b> 按学分权重折算，再按各科「作业 / 期中 / 期末」占比合成。<br>占比为常见结构，可在左侧逐门调整；分数并非官方发布，当参考就好。`}
         </p>
       </div>`;
   }
@@ -774,6 +780,8 @@
     cur.classList.remove('fade-in');
     void cur.offsetWidth;
     cur.classList.add('fade-in');
+    /* 英文模式下，切到哪个视图就把哪个视图翻一遍（隐藏视图在切换时是不翻的） */
+    if (window.i18nRefresh) { try { window.i18nRefresh(); } catch (e) {} }
   }
 
   function route() {
