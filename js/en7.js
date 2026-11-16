@@ -34,7 +34,7 @@ window.EN_MAP = Object.assign(window.EN_MAP || {}, {
   "《Year 1 Registration Guide 2025-26》": "Year 1 Registration Guide 2025-26",
   "只看大一第一学期；学校每年可能微调": "Semester 1 only; the school may adjust each year",
   "录取分（18 个专业）": "Admission marks (18 programmes)",
-  "学校每年 3 月公布的录取结果表": "The admission results table published each March",
+  "学校每年 12 月底公布的录取结果表": "The admission results table published each December",
   "标「官方」；其余学校不公布，页面写「未公布」": "Marked 'official'; the rest are not published and shown as 'Not published'",
   "近三年分数（15 个专业）": "Last three years (15 programmes)",
   "学校历年录取结果表": "Past admission results tables",
